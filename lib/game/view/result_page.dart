@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:quiz_game/game/view/home.dart';
+import 'package:provider/provider.dart';
+import 'package:quiz_game/game/view_model/question_provider.dart';
 import '../model/question_model.dart';
 
 class ResultPage extends StatelessWidget {
@@ -9,8 +11,22 @@ class ResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-      child: Text("$score/${questions.length}"),
+        body: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Center(
+          child: Text("$score/${questions.length}"),
+        ),
+        ElevatedButton.icon(
+            onPressed: () {
+              context.read<QuestionProvider>().retry();
+
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => Home()));
+            },
+            icon: Icon(Icons.reply),
+            label: Text("retry"))
+      ],
     ));
   }
 }

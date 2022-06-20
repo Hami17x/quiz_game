@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_game/game/view/widget/options_widget.dart';
+import 'package:provider/provider.dart';
+import 'package:quiz_game/game/view_model/question_provider.dart';
 
 import '../../model/question_model.dart';
 import '../result_page.dart';
@@ -12,19 +14,6 @@ class QuestionWidget extends StatefulWidget {
 }
 
 class _QuestionWidgetState extends State<QuestionWidget> {
-  late PageController _controller;
-
-  int _questionNumber = 1;
-  int _score = 0;
-  bool _isLocked = false;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _controller = PageController(initialPage: 0);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -33,23 +22,26 @@ class _QuestionWidgetState extends State<QuestionWidget> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           SizedBox(
-            height: 40,
+            height: 50,
           ),
-          Text("Question $_questionNumber/${questions.length}"),
+          Text(
+              "Question ${context.watch<QuestionProvider>().questionNumber}/${questions.length}"),
           Divider(
             thickness: 2,
             color: Colors.amberAccent,
           ),
           Expanded(
               child: PageView.builder(
-                  controller: _controller,
+                  controller: context.read<QuestionProvider>().controller,
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: questions.length,
                   itemBuilder: (context, index) {
                     final _question = questions[index];
                     return buildQuestion(_question);
                   })),
-          _isLocked ? buildElevatedButton() : SizedBox.shrink(),
+          context.watch<QuestionProvider>().isLocked
+              ? buildElevatedButton()
+              : SizedBox.shrink(),
         ],
       ),
     );
@@ -74,9 +66,13 @@ class _QuestionWidgetState extends State<QuestionWidget> {
                     question.isLocked = true;
                     question.selectedOption = option;
                   });
-                  _isLocked = question.isLocked;
+                  context
+                      .read<QuestionProvider>()
+                      .setIsLocked(question.isLocked);
+                  //_isLocked = question.isLocked;
                   if (question.selectedOption!.isCorrect) {
-                    _score++;
+                    //_score++;
+                    context.read<QuestionProvider>().incScore();
                   }
                 }
               }),
@@ -88,23 +84,25 @@ class _QuestionWidgetState extends State<QuestionWidget> {
   ElevatedButton buildElevatedButton() {
     return ElevatedButton(
         onPressed: () {
-          if (_questionNumber < questions.length) {
-            _controller.nextPage(
+          if (context.read<QuestionProvider>().questionNumber <
+              questions.length) {
+            context.read<QuestionProvider>().controller.nextPage(
                 duration: Duration(milliseconds: 150),
                 curve: Curves.easeInExpo);
-            setState(() {
-              _questionNumber++;
-              _isLocked = false;
-            });
+            context.read<QuestionProvider>().incQuestionNumber();
+            context.read<QuestionProvider>().setIsLocked(false);
           } else {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ResultPage(score: _score)));
+                    builder: (context) => ResultPage(
+                        // score: _score
+                        score: context.read<QuestionProvider>().score)));
           }
         },
-        child: Text(_questionNumber < questions.length
-            ? "Next question"
-            : "See result"));
+        child: Text(
+            context.read<QuestionProvider>().questionNumber < questions.length
+                ? "Next question"
+                : "See result"));
   }
 }

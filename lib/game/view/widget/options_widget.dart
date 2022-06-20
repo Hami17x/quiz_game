@@ -27,7 +27,8 @@ class OptionsWidget extends StatelessWidget {
         padding: EdgeInsets.all(12),
         margin: EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-            color: Colors.grey,
+            //color: Colors.grey,
+            color: color,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: color)),
         child: Row(
