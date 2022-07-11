@@ -45,7 +45,7 @@ class OptionsWidget extends StatelessWidget {
       if (isSelected) {
         return option.isCorrect ? Colors.green : Colors.red;
       } else if (option.isCorrect) {
-        return Colors.green;
+        return Colors.lightGreen;
       }
     }
     return Colors.grey;
