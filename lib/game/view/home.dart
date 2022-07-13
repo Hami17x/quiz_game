@@ -1,9 +1,10 @@
-import 'dart:developer';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_game/game/model/question_model.dart';
+import 'package:quiz_game/game/model/questions_data.dart';
 import 'package:quiz_game/game/view/game.dart';
+import 'package:quiz_game/game/view/result_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../pages/onboarding_page.dart';
@@ -19,11 +20,6 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Quizz App'),
         actions: [
-          ElevatedButton(
-              onPressed: () {
-                inspect(questions);
-              },
-              child: Text("sdsd")),
           IconButton(
               onPressed: () async {
                 final prefs = await SharedPreferences.getInstance();
@@ -36,36 +32,103 @@ class Home extends StatelessWidget {
               onPressed: () {
                 context.read<ThemeProvider>().changeTheme();
               },
-              icon: Icon(Icons.change_circle))
+              icon: context.watch<ThemeProvider>().isLightTheme
+                  ? Icon(Icons.light_mode)
+                  : Icon(Icons.dark_mode))
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(10),
-        child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200,
-                childAspectRatio: 3 / 2,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20),
-            itemCount: games.length,
-            itemBuilder: (BuildContext ctx, index) {
-              return InkWell(
-                onTap: () {
-                  context.read<QuestionProvider>().retry();
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => GamePage(
-                            game: games[index],
-                          )));
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Text(games[index].name),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Popular",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: 3 / 2,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20),
+                itemCount: games.length,
+                itemBuilder: (BuildContext ctx, index) {
+                  return InkWell(
+                    onTap: () {
+                      context.read<QuestionProvider>().retry();
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => GamePage(
+                                game: games[index],
+                              )));
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Text(games[index].name),
+                    ),
+                  );
+                }),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Text(
+                "Levels",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(
+              height: 200.0,
+              child: ListView.builder(
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (BuildContext context, int index) => SizedBox(
+                  width: 200,
+                  child: Card(
+                    child: Center(
+                        child: Image.asset(
+                      "assets/coming_soon.png",
+                      width: 100,
+                      height: 100,
+                    )),
+                  ),
                 ),
-              );
-            }),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Text(
+                "Others",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ),
+            ListView.builder(
+              physics: ClampingScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: 5,
+              itemBuilder: (BuildContext context, int index) => SizedBox(
+                height: 200,
+                child: Card(
+                  child: Center(
+                      child: Image.asset(
+                    "assets/coming_soon.png",
+                    width: 100,
+                    height: 100,
+                  )),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

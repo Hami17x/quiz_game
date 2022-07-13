@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
-import 'package:quiz_game/deneme.dart';
 import 'package:quiz_game/game/view_model/question_provider.dart';
 import 'package:quiz_game/onboard_provider.dart';
 import 'package:quiz_game/pages/onboarding_page.dart';
@@ -20,6 +20,8 @@ Future<void> main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool("showHome") ?? false;
+
+  FlutterNativeSplash.remove();
 
   runApp(
     EasyLocalization(

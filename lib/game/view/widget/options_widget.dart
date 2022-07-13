@@ -24,19 +24,23 @@ class OptionsWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () => onClickedOption(option),
       child: Container(
-        height: 50,
-        padding: EdgeInsets.all(12),
-        margin: EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-            //color: Colors.grey,
-            color: color,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: color)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [Text(option.text)],
-        ),
-      ),
+          height: 60,
+          width: double.infinity,
+          padding: EdgeInsets.all(10),
+          margin: EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+              //color: Colors.grey,
+              color: color,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: color)),
+          child: Center(
+            child: Text(
+              option.text,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              style: TextStyle(fontSize: 16),
+            ),
+          )),
     );
   }
 

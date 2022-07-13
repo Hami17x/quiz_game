@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
+import 'package:quiz_game/constants.dart';
 import 'package:quiz_game/game/view/home.dart';
 import 'package:quiz_game/helper/privacy_policy.dart';
 import 'package:quiz_game/onboard_provider.dart';
@@ -56,22 +57,23 @@ class _OnboardingPageState extends State<OnboardingPage> {
         ),
       ),
       bottomSheet: isLastPage
-          ? TextButton(
-              style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                  primary: Colors.white,
-                  backgroundColor: Colors.teal.shade600,
-                  minimumSize: Size.fromHeight(80)),
-              onPressed: context.watch<OnBoardProvider>().isChecked
-                  ? () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      prefs.setBool("showHome", true);
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => Home()));
-                    }
-                  : null,
-              child: Text("GET STARTED"))
+          ? Container(
+              color: Colors.teal,
+              child: TextButton(
+                  style: TextButton.styleFrom(
+                      primary: Colors.white,
+                      backgroundColor: Colors.teal.shade600,
+                      minimumSize: Size.fromHeight(80)),
+                  onPressed: context.watch<OnBoardProvider>().isChecked
+                      ? () async {
+                          final prefs = await SharedPreferences.getInstance();
+                          prefs.setBool("showHome", true);
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) => Home()));
+                        }
+                      : null,
+                  child: Text("GET STARTED")),
+            )
           : Container(
               color: Colors.lightGreen,
               height: 80,
@@ -143,9 +145,17 @@ class _ThirdPageOnBoardState extends State<ThirdPageOnBoard> {
                 }),
           ),
           InkWell(
-            onTap: () {
+            onTap: () async {
+              final Uri _url = Uri.parse(privacyPolicyUrl);
+
+              if (!await launchUrl(_url)) {
+                throw 'Could not launch $_url';
+              }
+
+              /*
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => PrivacyPolicyPage()));
+                  */
             },
             child: const Text(
               "Terms Of Conditions",

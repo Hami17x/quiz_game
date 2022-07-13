@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../model/question_model.dart';
+import '../model/questions_data.dart';
 
 class QuestionProvider extends ChangeNotifier {
   late PageController controller;
@@ -35,6 +36,18 @@ class QuestionProvider extends ChangeNotifier {
     questionNumber = 1;
     isLocked = false;
     score = 0;
+    questions.forEach((element) {
+      element.isLocked = false;
+      element.selectedOption = null;
+    });
+
+    games[2].questions.forEach((element) {
+      element.isLocked = false;
+      element.selectedOption = null;
+    });
+  }
+
+  void makeefault(List<Question> questions) {
     questions.forEach((element) {
       element.isLocked = false;
       element.selectedOption = null;
