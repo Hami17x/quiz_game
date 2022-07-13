@@ -7,13 +7,15 @@ import '../../model/question_model.dart';
 import '../result_page.dart';
 
 class QuestionWidget extends StatefulWidget {
-  const QuestionWidget({Key? key}) : super(key: key);
+  const QuestionWidget({Key? key, required this.list}) : super(key: key);
+  final List<Question> list;
 
   @override
   State<QuestionWidget> createState() => _QuestionWidgetState();
 }
 
 class _QuestionWidgetState extends State<QuestionWidget> {
+  //var randomList = questions.toList()..shuffle();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -25,7 +27,7 @@ class _QuestionWidgetState extends State<QuestionWidget> {
             height: 50,
           ),
           Text(
-              "Question ${context.watch<QuestionProvider>().questionNumber}/${questions.length}"),
+              "Question ${context.watch<QuestionProvider>().questionNumber}/${widget.list.length}"),
           Divider(
             thickness: 2,
             color: Colors.amberAccent,
@@ -34,9 +36,9 @@ class _QuestionWidgetState extends State<QuestionWidget> {
               child: PageView.builder(
                   controller: context.read<QuestionProvider>().controller,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: questions.length,
+                  itemCount: widget.list.length,
                   itemBuilder: (context, index) {
-                    final _question = questions[index];
+                    final _question = widget.list[index];
                     return buildQuestion(_question);
                   })),
           context.watch<QuestionProvider>().isLocked
@@ -59,6 +61,8 @@ class _QuestionWidgetState extends State<QuestionWidget> {
           child: OptionsWidget(
               question: question,
               onClickedOption: (option) {
+                //print(option.text);
+
                 if (question.isLocked) {
                   return;
                 } else {
@@ -69,9 +73,8 @@ class _QuestionWidgetState extends State<QuestionWidget> {
                   context
                       .read<QuestionProvider>()
                       .setIsLocked(question.isLocked);
-                  //_isLocked = question.isLocked;
-                  if (question.selectedOption!.isCorrect) {
-                    //_score++;
+
+                  if (question.selectedOption!.text == question.option.text) {
                     context.read<QuestionProvider>().incScore();
                   }
                 }
@@ -85,7 +88,7 @@ class _QuestionWidgetState extends State<QuestionWidget> {
     return ElevatedButton(
         onPressed: () {
           if (context.read<QuestionProvider>().questionNumber <
-              questions.length) {
+              widget.list.length) {
             context.read<QuestionProvider>().controller.nextPage(
                 duration: Duration(milliseconds: 150),
                 curve: Curves.easeInExpo);
@@ -96,12 +99,13 @@ class _QuestionWidgetState extends State<QuestionWidget> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ResultPage(
+                        lenght: widget.list.length,
                         // score: _score
                         score: context.read<QuestionProvider>().score)));
           }
         },
         child: Text(
-            context.read<QuestionProvider>().questionNumber < questions.length
+            context.read<QuestionProvider>().questionNumber < widget.list.length
                 ? "Next question"
                 : "See result"));
   }

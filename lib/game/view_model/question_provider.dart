@@ -22,11 +22,6 @@ class QuestionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setQuestionNumber(int value) {
-    questionNumber = value;
-    notifyListeners();
-  }
-
   void incScore() {
     score++;
     notifyListeners();

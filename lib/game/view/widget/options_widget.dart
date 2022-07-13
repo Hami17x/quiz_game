@@ -13,6 +13,7 @@ class OptionsWidget extends StatelessWidget {
   Widget build(BuildContext context) => SingleChildScrollView(
         child: Column(
           children: question.options
+              .toList()
               .map((option) => buildOption(context, option))
               .toList(),
         ),
@@ -39,12 +40,14 @@ class OptionsWidget extends StatelessWidget {
     );
   }
 
-  Color getColorForOption(option, Question question) {
-    final isSelected = option == question.selectedOption;
+  Color getColorForOption(Option option, Question question) {
+    final isSelected = option.text == question.selectedOption?.text;
     if (question.isLocked) {
       if (isSelected) {
-        return option.isCorrect ? Colors.green : Colors.red;
-      } else if (option.isCorrect) {
+        return question.option.text == question.selectedOption?.text
+            ? Colors.green
+            : Colors.red;
+      } else if (option.text == question.option.text) {
         return Colors.lightGreen;
       }
     }

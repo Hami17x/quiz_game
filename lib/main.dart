@@ -2,8 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:quiz_game/deneme.dart';
 import 'package:quiz_game/game/view_model/question_provider.dart';
-import 'package:quiz_game/global/theme/theme.dart';
+import 'package:quiz_game/onboard_provider.dart';
+import 'package:quiz_game/pages/onboarding_page.dart';
+import 'package:quiz_game/theme/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'game/view/home.dart';
 
 Future<void> main() async {
@@ -14,6 +18,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
+  final prefs = await SharedPreferences.getInstance();
+  final showHome = prefs.getBool("showHome") ?? false;
+
   runApp(
     EasyLocalization(
         supportedLocales: [Locale('en'), Locale('tr')],
@@ -22,17 +29,21 @@ Future<void> main() async {
         fallbackLocale: Locale('en'),
         child: MultiProvider(
             providers: [
+              ChangeNotifierProvider(create: (context) => OnBoardProvider()),
               ChangeNotifierProvider(create: (context) => QuestionProvider()),
-              ChangeNotifierProvider(create: (context) => ThemeProvider())
+              ChangeNotifierProvider(
+                  create: (context) => ThemeProvider(
+                      isLightTheme: prefs.getBool("isLightTheme") ?? true))
             ],
             builder: (context, child) {
-              return MyApp();
+              return MyApp(showHome: showHome);
             })),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final bool showHome;
+  const MyApp({Key? key, required this.showHome}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -44,7 +55,7 @@ class MyApp extends StatelessWidget {
       locale: context.locale,
       title: 'Flutter Demo',
       theme: context.watch<ThemeProvider>().currentTheme,
-      home: const Home(),
+      home: showHome ? Home() : OnboardingPage(),
     );
   }
 }
