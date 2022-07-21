@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_game/game/view/widget/question_widget.dart';
-import 'package:quiz_game/theme/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../pages/onboarding_page.dart';
 import '../model/question_model.dart';

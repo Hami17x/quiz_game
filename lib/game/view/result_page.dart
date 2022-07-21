@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_game/game/view/game.dart';
-import 'package:quiz_game/game/view/home.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_game/game/view_model/question_provider.dart';
-import '../model/question_model.dart';
 
 class ResultPage extends StatelessWidget {
   final score, lenght;
@@ -17,32 +14,21 @@ class ResultPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Center(
-          child: Text("$score/$lenght"),
+            child: Text(
+          "$score/$lenght",
+          style: TextStyle(fontSize: 20),
+        )),
+        Text(
+          "SCORE",
+          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
         ),
-
-        /*
-        ElevatedButton.icon(
-            onPressed: ()  {
-              context.read<QuestionProvider>().retry();
-
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => GamePage(
-                            game: games[0],
-                          )));
-            },
-            icon: Icon(Icons.reply),
-            label: Text("retry"))
-            */
-
         ElevatedButton.icon(
             onPressed: () {
               context.read<QuestionProvider>().retry();
 
               Navigator.pop(context);
             },
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.reply),
             label: Text("Home"))
       ],
     ));

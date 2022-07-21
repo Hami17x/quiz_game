@@ -19,7 +19,7 @@ class QuestionWidget extends StatefulWidget {
 class _QuestionWidgetState extends State<QuestionWidget> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Padding(
       padding: EdgeInsets.all(15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -30,11 +30,10 @@ class _QuestionWidgetState extends State<QuestionWidget> {
                 "Question ${context.watch<QuestionProvider>().questionNumber}/${widget.list.length}"),
           ),
           Divider(
-            thickness: 1,
+            thickness: 0.5,
             color: Colors.amberAccent,
           ),
-          Container(
-            height: MediaQuery.of(context).size.height / 2,
+          Expanded(
             child: PageView.builder(
                 controller: context.read<QuestionProvider>().controller,
                 physics: NeverScrollableScrollPhysics(),
@@ -44,10 +43,10 @@ class _QuestionWidgetState extends State<QuestionWidget> {
                   return buildQuestion(_question);
                 }),
           ),
-          TimerWidget(list: widget.list),
           context.watch<QuestionProvider>().isLocked
               ? buildElevatedButton()
               : SizedBox.shrink(),
+          TimerWidget(list: widget.list),
         ],
       ),
     );
@@ -58,10 +57,10 @@ class _QuestionWidgetState extends State<QuestionWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          height: 70,
+          height: 80,
           child: Text(
             question.text,
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(fontSize: 18),
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
           ),
@@ -132,9 +131,8 @@ class _TimerWidgetState extends State<TimerWidget> {
   Timer? timer;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // timeLeft = widget.list.length * 5;
+    timeLeft = widget.list.length * 5;
     _startCountDown();
   }
 
@@ -142,7 +140,6 @@ class _TimerWidgetState extends State<TimerWidget> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-
     timer?.cancel();
   }
 

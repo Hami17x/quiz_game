@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class OnBoardProvider extends ChangeNotifier {
-  bool isChecked = false;
+  bool isChecked = true;
 
   void changeChecked() {
     isChecked = !isChecked;

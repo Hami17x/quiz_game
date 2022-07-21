@@ -5,9 +5,7 @@ import 'package:quiz_game/constants.dart';
 import 'package:quiz_game/game/view/home.dart';
 import 'package:quiz_game/helper/privacy_policy.dart';
 import 'package:quiz_game/onboard_provider.dart';
-import 'package:quiz_game/pages/privacy_policy_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -32,78 +30,111 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.only(bottom: 80),
-        child: PageView(
-          controller: controller,
-          physics: NeverScrollableScrollPhysics(),
-          onPageChanged: (index) {
-            setState(() {
-              isLastPage = index == 2;
-              isFirstPage = index == 0;
-            });
-          },
-          children: [
-            Container(
-              color: Colors.blue,
-              child: Center(child: Text("Page1")),
-            ),
-            Container(
-              color: Colors.purple,
-              child: Center(child: Text("Page1")),
-            ),
-            ThirdPageOnBoard()
-          ],
+        body: Container(
+          padding: EdgeInsets.only(bottom: 80),
+          child: PageView(
+            controller: controller,
+            physics: NeverScrollableScrollPhysics(),
+            onPageChanged: (index) {
+              setState(() {
+                isLastPage = index == 2;
+                isFirstPage = index == 0;
+              });
+            },
+            children: [FirstOPage(), SecondOPage(), ThirdPageOnBoard()],
+          ),
         ),
-      ),
-      bottomSheet: isLastPage
-          ? Container(
-              color: Colors.teal,
-              child: TextButton(
+        bottomSheet: isLastPage
+            ? Container(
+                color: Colors.teal,
+                child: TextButton(
+                    style: TextButton.styleFrom(
+                        textStyle: TextStyle(fontSize: 25),
+                        primary: Colors.white,
+                        backgroundColor: Colors.teal.shade600,
+                        minimumSize: Size.fromHeight(80)),
+                    onPressed: context.watch<OnBoardProvider>().isChecked
+                        ? () async {
+                            final prefs = await SharedPreferences.getInstance();
+                            prefs.setBool("showHome", true);
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => Home()));
+                          }
+                        : null,
+                    child: Text("GET STARTED")),
+              )
+            : Container(
+                height: 80,
+                color: Colors.lightGreen,
+                child: Center(
+                    child: TextButton(
+                  onPressed: () {
+                    controller.nextPage(
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.easeInOut);
+                  },
+                  child: Text("NEXT"),
                   style: TextButton.styleFrom(
-                      primary: Colors.white,
-                      backgroundColor: Colors.teal.shade600,
-                      minimumSize: Size.fromHeight(80)),
-                  onPressed: context.watch<OnBoardProvider>().isChecked
-                      ? () async {
-                          final prefs = await SharedPreferences.getInstance();
-                          prefs.setBool("showHome", true);
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (context) => Home()));
-                        }
-                      : null,
-                  child: Text("GET STARTED")),
-            )
-          : Container(
-              color: Colors.lightGreen,
-              height: 80,
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                      onPressed: !isFirstPage
-                          ? () {
-                              controller.previousPage(
-                                  duration: Duration(milliseconds: 500),
-                                  curve: Curves.easeInOut);
-                            }
-                          : null,
-                      child: Text("Back")),
-                  Center(
-                    child:
-                        SmoothPageIndicator(controller: controller, count: 3),
+                    primary: Colors.white,
+                    textStyle: TextStyle(fontSize: 25),
+                    minimumSize: Size.fromHeight(80),
                   ),
-                  TextButton(
-                      onPressed: () {
-                        controller.nextPage(
-                            duration: Duration(milliseconds: 500),
-                            curve: Curves.easeInOut);
-                      },
-                      child: Text("Next")),
-                ],
-              ),
-            ),
+                )),
+              ));
+  }
+}
+
+class FirstOPage extends StatelessWidget {
+  const FirstOPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //color: Colors.amber,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset("assets/o1.png"),
+          const SizedBox(
+            height: 20,
+          ),
+          const Text(
+            "WELCOME\n   to\n    QUIZ",
+            style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: Colors.purple),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SecondOPage extends StatelessWidget {
+  const SecondOPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //color: Colors.lightGreen,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset("assets/o2.png"),
+          const SizedBox(
+            height: 20,
+          ),
+          const Text(
+            "CHOOSE\n   CATEGORY\n      LEVEL\n       TIMER",
+            style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: Colors.purple),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -131,7 +162,7 @@ class _ThirdPageOnBoardState extends State<ThirdPageOnBoard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.deepOrange,
+      //color: Colors.deepOrange,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         //crossAxisAlignment: CrossAxisAlignment.start,

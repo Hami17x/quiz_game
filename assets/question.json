@@ -1,0 +1,55 @@
+[
+    {
+        "value": "absolutely",
+      "type": "adverb",
+      "definition": "used to emphasize that something is completely true",
+      "examples": ["You're absolutely right.", "Are you absolutely sure?"] 
+    },
+    {"value": "ahead",
+    "type": "adverb",
+    "definition": "further forward in space or time; in front",
+    "examples": [
+      "The road ahead was blocked.",
+      "This will create problems in the months ahead."]
+      
+  },
+  {
+    "value": "apart",
+    "type": "adverb",
+    "definition": "separated by a distance, of space or time",
+    "examples": [
+      "Their birthdays are only three days apart.",
+      "The two houses stood 500 metres apart."
+    ]
+  },{
+    "value": "approximately",
+      "type": "adverb",
+      "definition":
+          "used to show that something is almost, but not completely, accurate or correct",
+      "examples": [
+        "The two buildings were approximately equal in size.",
+        "The journey took approximately seven hours."
+      ]
+  },
+  {"value": "backwards",
+  "type": "adverb",
+  "definition": "towards a place or position that is behind",
+  "examples": [
+    "I lost my balance and fell backwards.",
+    "He took a step backwards."
+  ]
+
+  },
+  {
+    "value": "cheap",
+    "type": "adverb",
+    "definition": "for a low price",
+    "examples": [
+      "They're selling fabrics cheap this week.",
+      "private equity companies that borrow cheap"
+    ]
+  
+
+  }
+    
+]

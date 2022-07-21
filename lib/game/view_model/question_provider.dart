@@ -1,17 +1,45 @@
+import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 
 import '../model/question_model.dart';
-import '../model/questions_data.dart';
+import '../model/word_model.dart';
 
 class QuestionProvider extends ChangeNotifier {
+  QuestionProvider(BuildContext context) {
+    controller = PageController(initialPage: 0);
+    initGames(context);
+  }
+
+  List<Game> games = [];
+
+  void initGames(BuildContext context) async {
+    List<Word> liste = await getDenemes(context);
+    games.add(Game(
+        name: "B1 Adverb",
+        questions: liste
+            .map((e) => Question(
+                text: e.definition,
+                options: getOptions(
+                    e.value, liste.map((e) => Option(text: e.value)).toList()),
+                option: Option(text: e.value)))
+            .toList()));
+    notifyListeners();
+  }
+
+  Future<List<Word>> getDenemes(BuildContext context) async {
+    final assesBundle = DefaultAssetBundle.of(context);
+    final data = await assesBundle.loadString("assets/question.json");
+    final body = jsonDecode(data);
+    return body.map<Word>(Word.fromJson).toList();
+  }
+
   late PageController controller;
   int questionNumber = 1;
   int score = 0;
   bool isLocked = false;
 
-  QuestionProvider() {
-    controller = PageController(initialPage: 0);
-  }
+  Future<void> initQuestions() async {}
 
   void setIsLocked(bool value) {
     isLocked = value;
@@ -36,15 +64,13 @@ class QuestionProvider extends ChangeNotifier {
     questionNumber = 1;
     isLocked = false;
     score = 0;
-    questions.forEach((element) {
-      element.isLocked = false;
-      element.selectedOption = null;
-    });
 
-    games[2].questions.forEach((element) {
-      element.isLocked = false;
-      element.selectedOption = null;
-    });
+    for (int i = 0; i < games.length; i++) {
+      games[i].questions.forEach((element) {
+        element.isLocked = false;
+        element.selectedOption = null;
+      });
+    }
   }
 
   void makeefault(List<Question> questions) {

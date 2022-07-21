@@ -1,14 +1,10 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quiz_game/game/model/question_model.dart';
-import 'package:quiz_game/game/model/questions_data.dart';
+import 'package:quiz_game/game/model/word_model.dart';
 import 'package:quiz_game/game/view/game.dart';
-import 'package:quiz_game/game/view/result_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../pages/onboarding_page.dart';
 import '../../theme/theme.dart';
+import '../model/question_model.dart';
 import '../view_model/question_provider.dart';
 
 class Home extends StatelessWidget {
@@ -20,6 +16,7 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Quizz App'),
         actions: [
+          /*
           IconButton(
               onPressed: () async {
                 final prefs = await SharedPreferences.getInstance();
@@ -28,6 +25,7 @@ class Home extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => OnboardingPage()));
               },
               icon: Icon(Icons.arrow_back)),
+              */
           IconButton(
               onPressed: () {
                 context.read<ThemeProvider>().changeTheme();
@@ -42,6 +40,7 @@ class Home extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            ElevatedButton(onPressed: () {}, child: Text("tıkla")),
             Text(
               "Popular",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -49,33 +48,7 @@ class Home extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 3 / 2,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20),
-                itemCount: games.length,
-                itemBuilder: (BuildContext ctx, index) {
-                  return InkWell(
-                    onTap: () {
-                      context.read<QuestionProvider>().retry();
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => GamePage(
-                                game: games[index],
-                              )));
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: Colors.amber,
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Text(games[index].name),
-                    ),
-                  );
-                }),
+            _popularGames(context, context.watch<QuestionProvider>().games),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
               child: Text(
@@ -131,5 +104,34 @@ class Home extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  GridView _popularGames(BuildContext context, List<Game> games) {
+    return GridView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200,
+            childAspectRatio: 3 / 2,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20),
+        itemCount: games.length,
+        itemBuilder: (BuildContext ctx, index) {
+          return InkWell(
+            onTap: () {
+              context.read<QuestionProvider>().retry();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => GamePage(
+                        game: games[index],
+                      )));
+            },
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: Colors.amber, borderRadius: BorderRadius.circular(15)),
+              child: Text(games[index].name),
+            ),
+          );
+        });
   }
 }

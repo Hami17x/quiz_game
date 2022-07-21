@@ -24,7 +24,7 @@ class OptionsWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () => onClickedOption(option),
       child: Container(
-          height: 60,
+          height: 50,
           width: double.infinity,
           padding: EdgeInsets.all(10),
           margin: EdgeInsets.symmetric(vertical: 10),
@@ -37,7 +37,7 @@ class OptionsWidget extends StatelessWidget {
             child: Text(
               option.text,
               overflow: TextOverflow.ellipsis,
-              maxLines: 2,
+              maxLines: 1,
               style: TextStyle(fontSize: 16),
             ),
           )),

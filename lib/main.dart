@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_game/game/view_model/question_provider.dart';
+
 import 'package:quiz_game/onboard_provider.dart';
 import 'package:quiz_game/pages/onboarding_page.dart';
 import 'package:quiz_game/theme/theme.dart';
@@ -20,6 +21,7 @@ Future<void> main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool("showHome") ?? false;
+  //final showHome = false;
 
   FlutterNativeSplash.remove();
 
@@ -32,7 +34,8 @@ Future<void> main() async {
         child: MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (context) => OnBoardProvider()),
-              ChangeNotifierProvider(create: (context) => QuestionProvider()),
+              ChangeNotifierProvider(
+                  create: (context) => QuestionProvider(context)),
               ChangeNotifierProvider(
                   create: (context) => ThemeProvider(
                       isLightTheme: prefs.getBool("isLightTheme") ?? true))
@@ -50,6 +53,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // DenemeUtils.getQues(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       localizationsDelegates: context.localizationDelegates,
